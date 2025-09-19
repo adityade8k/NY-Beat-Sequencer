@@ -1,0 +1,59 @@
+body {
+  width: 100vw;
+  height: 100vh;
+  margin: 0px;
+  padding: 0px;
+  background-color: black;
+}
+
+* {
+  /* border: 1px solid cyan; */
+  box-sizing: border-box;
+  font-family: "inter-variable", sans-serif;
+  /* font-variation-settings: "slnt" 0, "wght" 400; */
+}
+
+#root {
+  width: 100vh;
+  height: 100vh;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 2vh;
+  font-weight: 700;
+}
+
+#topPanel {
+  display: flex;
+  flex-direction: row;
+  gap: 2vh;
+}
+
+.packCont {
+  color: white;
+  padding: 2vh;
+  height: 49vh;
+  max-height: 49vh;
+  border: #FFFD98 0.01vh solid;
+}
+
+.half {
+  flex-grow: 1;
+  max-width: 49vh;
+}
+
+.filePicker {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap : 2vh;
+}
+
+.mixer{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 2vh;
+
+}
+

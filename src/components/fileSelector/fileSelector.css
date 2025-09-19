@@ -1,0 +1,44 @@
+.fileSelector{
+    height: 100%;
+    overflow-y: scroll;
+    border: 0.1vh solid white;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5vh;
+}
+
+.fileSelectorTile{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.5vh;
+    border: 0.1vh solid white;
+}
+
+.fileSelectorTileactive{
+    color: black;
+    background-color: #E7FF30;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0.5vh;
+}
+
+.loadCont{
+    height: 1.5rem;
+    width: 1.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border: none;
+}
+
+.rightArrow{
+    height: 1.2rem;
+    width: 1.2rem;
+}
+
+.rightArrow.active{
+    filter: brightness(0);
+}

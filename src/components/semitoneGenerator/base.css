@@ -1,0 +1,63 @@
+/* src/components/base.css */
+
+/* --- layout --- */
+.semiGen {
+  color: #fff;
+  width: 100%;
+}
+
+.semiGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 22%);
+  column-gap: 4%;
+  row-gap: 0.2vh;
+  justify-content: start;
+  width: 100%;
+}
+
+/* --- tiles --- */
+.semiTile {
+  height: 90%;
+  aspect-ratio: 1 / 1;            /* perfect square */
+  border: 0.02vh solid #ffffff;
+  background: #000000;
+  color: #ffffff;
+  border-radius: 1vh;
+
+  display: grid;
+  place-items: center;
+  position: relative;
+  cursor: pointer;
+
+  font-weight: 700;
+  font-size: 2.4vh;               /* big +N */
+  line-height: 1;
+
+  transition: transform 80ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.semiTile:hover:not(:disabled) {
+  transform: translateY(-0.3vh);
+  box-shadow: 0 0 0 0.5vh #ffffff inset; /* vh spread */
+}
+
+.semiTile:focus-visible {
+  outline: 0.5vh dashed #ffffff;  /* vh outline */
+  outline-offset: 0.5vh;
+}
+
+.semiTile:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* selected (neon yellow) */
+.semiTile.selected {
+  background: #dfff3d;
+  border-color: #dfff3d;
+  color: #000000;
+}
+
+/* content */
+.semiTitle { font-weight: 700; }
+.semiSub { display: none !important; } /* hide Pitch: ... */

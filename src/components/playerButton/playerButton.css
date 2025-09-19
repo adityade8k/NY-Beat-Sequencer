@@ -1,0 +1,26 @@
+.playerButton{
+    background: none;
+    border: none;
+    border-radius: 100%;
+    width:30%;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    
+}
+
+.playerButtonIcon {
+    height: 100%;
+    width: 100%;
+    aspect-ratio: 1/1;
+}
+
+.playerButton.active{
+    background: #E7FF30
+}
+
+.playerButtonIcon.active{
+    filter: brightness(0);
+}
