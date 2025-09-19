@@ -91,15 +91,16 @@ const Sequencer = () => {
       </div>
 
       <div className="sequencerPanel bottom">
+        <div className="seqBoard">
+          <Board />
+        </div>
         <div className="sequencerFileList">
           <FileSelector
             files={seq.tones}
             onFileSelect={handleTrackSelect}
             selectedId={seq?.currentTone?.id}
+            right = {false}
           />
-        </div>
-        <div className="seqBoard">
-          <Board />
         </div>
       </div>
     </div>

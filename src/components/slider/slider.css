@@ -1,0 +1,8 @@
+.sliderHeader {
+    display: flex;
+    justify-content: space-between;
+}
+
+.sliderInput{
+    width: 100%;
+}

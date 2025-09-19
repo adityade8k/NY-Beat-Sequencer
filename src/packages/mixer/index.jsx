@@ -276,10 +276,11 @@ const Mixer = () => {
                         onToggle={handleReversedToggle}
                     />
 
-                    <div className="mixerSection">
-                        <button className="exportButton" onClick={handleExport}>
-                            {`Add track ${mixerState.tracksPushed}`}
-                        </button>
+                    <div className="exportSection">
+                        {`Add Track ${mixerState.tracksPushed}`}
+                        <div className="exportButton">
+                            <img src="./assets/rightDown.svg" className="exportIcon" onClick={handleExport}></img>
+                        </div>
                     </div>
                 </div>
             </div>

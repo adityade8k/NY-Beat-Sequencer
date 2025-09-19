@@ -22,7 +22,6 @@
   border: 0.02vh solid #ffffff;
   background: #000000;
   color: #ffffff;
-  border-radius: 1vh;
 
   display: grid;
   place-items: center;
@@ -61,3 +60,7 @@
 /* content */
 .semiTitle { font-weight: 700; }
 .semiSub { display: none !important; } /* hide Pitch: ... */
+
+.semiKey {
+    font-size: 1rem;
+}

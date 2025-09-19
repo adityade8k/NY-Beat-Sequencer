@@ -15,7 +15,7 @@
     border: 0.1vh solid white;
 }
 
-.fileSelectorTileactive{
+.fileSelectorTile.active{
     color: black;
     background-color: #E7FF30;
     display: flex;
@@ -41,4 +41,27 @@
 
 .rightArrow.active{
     filter: brightness(0);
+}
+
+/* Container centered empty state */
+.fileSelector--empty {
+  display: grid;
+  place-items: center;
+  min-height: 100%;
+}
+.fileSelector__emptyMsg {
+  opacity: 0.8;
+  text-align: center;
+}
+
+/* Flip layout when right === false */
+.fileSelectorTile.reverse {
+  display: flex;                /* ensure flex if your base isn't already */
+  flex-direction: row-reverse;  /* arrow on the LEFT, name on the RIGHT */
+}
+
+/* Point the same SVG left when needed */
+.rightArrow.left {
+  transform: scaleX(-1);
+  transform-origin: center;
 }

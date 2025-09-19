@@ -1,5 +1,5 @@
 // src/components/SemitoneGenerator.jsx
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import * as Tone from "tone";
 import "./base.css";
 
@@ -14,12 +14,11 @@ const mapReverb = (factor) => {
 };
 
 const OFFSETS = [0, 1, 2, 3, 4, 5, 6, 7];
+const KEY_TO_OFFSET = { q:0, w:1, e:2, r:3, a:4, s:5, d:6, f:7 };
 
 const SemitoneGenerator = ({ currentTrack, onNoteSelect, selectedSemiToneID }) => {
-  // local fallback so it still highlights even if parent doesn’t control it
   const [localSelected, setLocalSelected] = useState(null);
 
-  // derive a single numeric "selected offset" from the prop (supports number or object)
   const selectedOffset = useMemo(() => {
     const v = selectedSemiToneID;
     if (typeof v === "number") return v;
@@ -27,10 +26,10 @@ const SemitoneGenerator = ({ currentTrack, onNoteSelect, selectedSemiToneID }) =
       if (typeof v.semitone === "number") return v.semitone;
       if (typeof v.pitchOffset === "number") {
         const base = currentTrack?.pitchOffset || 0;
-        return v.pitchOffset - base; // infer relative offset
+        return v.pitchOffset - base;
       }
     }
-    return localSelected; // fall back to internal
+    return localSelected;
   }, [selectedSemiToneID, currentTrack?.pitchOffset, localSelected]);
 
   // audio nodes
@@ -38,7 +37,7 @@ const SemitoneGenerator = ({ currentTrack, onNoteSelect, selectedSemiToneID }) =
   const pitchRef = useRef(null);
   const reverbRef = useRef(null);
 
-  // (re)build when URL changes
+  // build graph on URL change
   useEffect(() => {
     const cleanup = () => {
       try { playerRef.current?.stop(); } catch {}
@@ -94,17 +93,15 @@ const SemitoneGenerator = ({ currentTrack, onNoteSelect, selectedSemiToneID }) =
     }
   }, [currentTrack?.reverbFactor]);
 
-  const handleClick = async (offset) => {
+  // unified trigger used by click & keyboard
+  const triggerOffset = useCallback(async (offset) => {
     if (!currentTrack?.url) return;
 
-    // highlight locally
     setLocalSelected(offset);
+    onNoteSelect?.(offset); // keep contract simple: send numeric offset
 
-    // tell parent the numeric offset (simple, stable contract)
-    onNoteSelect?.(offset);
-
-    // audition: play sample with base+offset pitch, same reverb/reverse
     try { await Tone.start(); } catch {}
+
     const player = playerRef.current;
     const pitch = pitchRef.current;
     if (!player || !pitch) return;
@@ -112,16 +109,57 @@ const SemitoneGenerator = ({ currentTrack, onNoteSelect, selectedSemiToneID }) =
     try { player.stop(); } catch {}
     pitch.pitch = (currentTrack.pitchOffset || 0) + offset;
     try { player.start(); } catch {}
-  };
+  }, [currentTrack?.url, currentTrack?.pitchOffset, onNoteSelect]);
+
+  const handleClick = (offset) => { triggerOffset(offset); };
+
+  // keyboard: q w e r a s d f  -> offsets 0..7
+  useEffect(() => {
+    const downPressed = new Set();
+
+    const isTypingTarget = (el) =>
+      el &&
+      (el.tagName === "INPUT" ||
+       el.tagName === "TEXTAREA" ||
+       el.tagName === "SELECT" ||
+       el.isContentEditable);
+
+    const onKeyDown = (e) => {
+      const key = e.key.toLowerCase();
+      if (!(key in KEY_TO_OFFSET)) return;
+      if (isTypingTarget(e.target)) return;
+
+      // avoid auto-repeat retriggers until keyup
+      if (e.repeat || downPressed.has(key)) return;
+
+      downPressed.add(key);
+      triggerOffset(KEY_TO_OFFSET[key]);
+    };
+
+    const onKeyUp = (e) => {
+      downPressed.delete(e.key.toLowerCase());
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    window.addEventListener("keyup", onKeyUp);
+    return () => {
+      window.removeEventListener("keydown", onKeyDown);
+      window.removeEventListener("keyup", onKeyUp);
+    };
+  }, [triggerOffset]);
 
   const disabled = !currentTrack?.url;
 
   return (
     <div className="semiGen">
       <div className="semiGrid">
-        {OFFSETS.map((offset) => {
+        {OFFSETS.map((offset, i) => {
           const isSelected = Number(selectedOffset) === offset;
           const label = offset === 0 ? "Root" : `+${offset}`;
+
+          // expose the keyboard shortcuts for a11y
+          const key = Object.keys(KEY_TO_OFFSET).find(k => KEY_TO_OFFSET[k] === offset);
+
           return (
             <button
               key={offset}
@@ -130,10 +168,16 @@ const SemitoneGenerator = ({ currentTrack, onNoteSelect, selectedSemiToneID }) =
               onClick={() => handleClick(offset)}
               disabled={disabled}
               aria-pressed={isSelected}
-              title={`${label} semitone`}
+              aria-keyshortcuts={key}     // e.g., "q", "w", ...
+              title={`${label} semitone (${key?.toUpperCase()})`}
             >
               <div className="semiTitle">{label}</div>
-              <div className="semiSub">Pitch: {(currentTrack?.pitchOffset || 0) + offset}</div>
+              <div className="semiSub">
+                Pitch: {(currentTrack?.pitchOffset || 0) + offset}
+              </div>
+              <div className="semiKey">
+                {key}
+              </div>
             </button>
           );
         })}

@@ -13,3 +13,25 @@
     align-items: center;
     justify-content: space-between;
 }
+
+.exportSection{
+    flex: 1;
+    width: 100%;
+    padding: 2vh;
+    padding-bottom: 1vh;
+    font-size: 1.6em;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+}
+
+.exportButton {
+    display: flex;
+    flex-direction: row-reverse;
+    height: 40%;
+}
+
+.exportIcon{
+    transform: scaleX(-1);
+    transform-origin: center;
+}

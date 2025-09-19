@@ -1,4 +1,5 @@
 import { useId } from 'react';
+import "./slider.css"
 
 const Slider = ({
   label,
